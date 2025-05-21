@@ -9,6 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class ContactViewModel(private val dao: ContactDao): ViewModel() {
-    val conacts: StateFlow<List<Contact>> = dao.getAll()
+    val contacts: StateFlow<List<Contact>> = dao.getAll()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }

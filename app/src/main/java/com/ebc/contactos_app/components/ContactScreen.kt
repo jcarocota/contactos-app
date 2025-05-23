@@ -8,7 +8,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
+import com.ebc.contactos_app.enity.Contact
 import com.ebc.contactos_app.viewmodel.ContactViewModel
 import com.ebc.contactos_app.viewmodel.ContactViewModelFactory
 
@@ -31,6 +38,8 @@ fun ContactScreen(vm:ContactViewModel, modifier: Modifier = Modifier) {
     var phone by remember { mutableStateOf("") }
 
     val contactList by vm.contacts.collectAsState()
+
+    var editingContact by remember { mutableStateOf<Contact?>(null) }
 
     Column(
         Modifier.padding(16.dp)
@@ -51,10 +60,17 @@ fun ContactScreen(vm:ContactViewModel, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(8.dp))
         Button(
             onClick = {
-                vm.addContact(name, phone)
+                if(editingContact == null) {
+                    vm.addContact(name, phone)
+                } else {
+                    vm.editContact(editingContact!!.copy(name = name, phone = phone))
+                    editingContact = null
+                }
+                name = ""
+                phone = ""
             }
         ) {
-            Text("Agregar Contacto")
+            Text(text = if (editingContact == null) "Agregar" else "Editar")
         }
         Spacer(Modifier.height(16.dp))
 
@@ -66,8 +82,25 @@ fun ContactScreen(vm:ContactViewModel, modifier: Modifier = Modifier) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(Modifier.weight(1f)) {
-                        Text(text = contact.name)
-                        Text(text = contact.phone)
+                        Text(text = contact.name, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = contact.phone, style = MaterialTheme.typography.bodySmall)
+                    }
+
+                    IconButton(
+                        onClick = {
+                            editingContact = contact
+                            name = contact.name
+                            phone = contact.phone
+                        }
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = "Editar")
+                    }
+                    IconButton(
+                        onClick = {
+                            vm.removeContact(contact)
+                        }
+                    ) {
+                        Icon(Icons.Default.Delete, contentDescription = "Editar")
                     }
                 }
             }

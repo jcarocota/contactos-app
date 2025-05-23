@@ -22,4 +22,16 @@ class ContactViewModel(private val dao: ContactDao): ViewModel() {
         }
 
     }
+
+    fun editContact(myContact: Contact) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.update(myContact)
+        }
+    }
+
+    fun removeContact(myContact: Contact) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.delete(myContact)
+        }
+    }
 }

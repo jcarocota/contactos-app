@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.room.Room
+import com.ebc.contactos_app.components.ContactScreen
 import com.ebc.contactos_app.room.AppDatabase
 import com.ebc.contactos_app.ui.theme.ContactosappTheme
 import com.ebc.contactos_app.viewmodel.ContactViewModel
@@ -37,8 +38,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ContactosappTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    ContactScreen(
+                        vm = vm,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
